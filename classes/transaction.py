@@ -1,25 +1,25 @@
-class Transaction():
+class Transaction:
     def __init__(self, txid, fee, weight, parents, ancesCnt=-1):
-        """Object that is used to store a transaction
+        """Object that stores a transaction.
 
         Args:
-            txid (str): hash of a transaction
-            fee (int): miners fee (i.e, the fee that a miner gets for including this transaction in their block)
-            weight (int): size of this transaction
-            parents (list): dependencies for this transaction
-            ancesCnt (int, optional): number of ancestors for this transaction. Defaults to -1.
+            txid (str): Hash of the transaction.
+            fee (int): Miner's fee for including this transaction in a block.
+            weight (int): Size of the transaction.
+            parents (list): Dependencies for this transaction.
+            ancesCnt (int, optional): Number of ancestors. Defaults to -1.
         """
         self.txid = txid
         self.fee = int(fee)
         self.weight = int(weight)
-        self.parents = [] if (not parents) else parents.split(';')
+        self.parents = [] if not parents else parents.split(';')
         self.ancestorCnt = ancesCnt
 
     def print(self):
-        print("id: {}".format(self.txid))
-        print("fee: {}".format(self.fee))
-        print("weight: {}".format(self.weight))
-        print("parents: {}\n".format(self.parents))
+        print(f"id: {self.txid}")
+        print(f"fee: {self.fee}")
+        print(f"weight: {self.weight}")
+        print(f"parents: {self.parents}\n")
 
     def cntParent(self):
         return len(self.parents)

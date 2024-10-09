@@ -1,17 +1,16 @@
 from classes.transaction import Transaction
 from classes.mempool import Mempool
 
-
 class Block():
     def __init__(self, maxWeight=float('inf'), txns=list(), weight=0, fee=0, vis=set()):
-        """Constructor for block class
+        """Constructor for Block class.
 
         Args:
-            maxWeight (int, optional): Maximum weight which this block can haven. Defaults to float('inf').
-            txns (list, optional): transactions in this block. Defaults to [].
-            weight (int, optional): sum of weight of every transactions present. Defaults to 0.
-            fee (int, optional): sum of fee of every transaction present. Defaults to 0.
-            vis (set, optional): used for marking nodes in DFS. Defaults to set().
+            maxWeight (int, optional): Maximum weight this block can have. Defaults to float('inf').
+            txns (list, optional): Transactions in this block. Defaults to [].
+            weight (int, optional): Sum of weight of every transaction present. Defaults to 0.
+            fee (int, optional): Sum of fee of every transaction present. Defaults to 0.
+            vis (set, optional): Used for marking nodes in DFS. Defaults to set().
         """
         self.txns = txns
         self.weight = weight
@@ -23,14 +22,14 @@ class Block():
         """Adds an equivalent transaction to this block.
 
         Args:
-            eqTxn (Transaction): Combining transaction with its ancestors into a single transaction
-            mempool (Mempool): Parsed inputs
+            eqTxn (Transaction): Combining transaction with its ancestors into a single transaction.
+            mempool (Mempool): Parsed inputs.
         """
-        # mark the eqTxn as visited
+        # Mark the eqTxn as visited
         self.visitedEqTxnIds.add(eqTxn.txid)
         eqTxnIds = eqTxn.txid.split('\n')
         for txid in eqTxnIds:
-            # get the txn from it's id
+            # Get the txn from its id
             txnIdx = mempool.findTxnIndex(txid)
             tx = mempool.txns[txnIdx]
 
@@ -41,18 +40,19 @@ class Block():
                     continue
                 self.addEqTxn(parEqTxn, mempool)
 
-        # add current eqTxn
+        # Add current eqTxn
         self.txns.append(eqTxn)
         self.weight += eqTxn.weight
         self.fee += eqTxn.fee
 
     def selectOptEqTxns(self, mempool):
-        """Loops through all the equivalent transaction adds them sequentialy along with its parent. NOTE: the equivalen transaction list must be sorted before using this function
+        """Loops through all the equivalent transactions and adds them sequentially along with their parents. 
+        Note: The equivalent transaction list must be sorted before using this function.
 
         Args:
-            mempool (Mempool): Parsed input
+            mempool (Mempool): Parsed input.
         """
-        # mark all ids as not visited
+        # Mark all ids as not visited
         self.visitedTxnIds = set()
 
         for eqTxn in mempool.eqTxns:
@@ -63,13 +63,12 @@ class Block():
                 self.addEqTxn(eqTxn, mempool)
 
     def print(self):
-        print("transactions: {}".format(self.txns))
-        print("fee: {}".format(self.fee))
-        print("weight: {}\n".format(self.weight))
+        print("Transactions: {}".format(self.txns))
+        print("Fee: {}".format(self.fee))
+        print("Weight: {}\n".format(self.weight))
 
     def createTxt(self):
-        """Creates the block.txt
-        """
+        """Creates the block.txt file."""
         with open('block.txt', 'w') as file_handle:
             for tx in self.txns:
                 file_handle.write('{}\n'.format(tx.txid))
